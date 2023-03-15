@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Latest stable build of Avia OR site code that bundles Avia -->
+    <script src="https://vidtech.cbsinteractive.com/avia-js/2.12.0/player/avia.min.js"></script>
+
+    <!-- Latest stable builds of plugins OR site code that bundles plugins -->
+    <script src="https://vidtech.cbsinteractive.com/avia-js/2.12.0/plugins/hls/avia.hls.min.js"></script>
+    <script src="https://vidtech.cbsinteractive.com/avia-js/2.12.0/plugins/ui/avia.ui.min.js"></script>
+    <script src="https://vidtech.cbsinteractive.com/avia-js/2.12.0/plugins/gam/avia.gam.min.js"></script>
+    <style>
+        .video-presentation-wrapper {
+            width: 853px;
+            height: 480px;
+        }
+    </style>
+</head>
+<body>
+    <div class='video-presentation-wrapper'>
+        <div id='videoPresentationContainer'>
+            <!-- This is the video presentation container -->
+        </div>
+    </div>
+
+    <script>
+        // Create player, passing a container selector and
+        // plugin config via playerOptions
+        function createPlayer() {
+            return avia.createVideoPlayer({
+                container: '#videoPresentationContainer',
+                plugins: [
+                    avia.hls.plugin(),
+                    avia.ui.plugin(),
+                    avia.gam.plugin({debug:true})
+                ]
+            })
+        }
+
+        const resource = {
+            ad: {
+                ssai: {
+                    contentSourceId: '2631375',
+                    videoId: 'mgid:arc:episode:roku.playplex.bet.com:e37a642a-a7e3-11eb-8774-70df2f866ace',
+                    apiKey: 'cmsid=2631375~exp=1678841579~vid=mgid:arc:episode:roku.playplex.bet.com:e37a642a-a7e3-11eb-8774-70df2f866ace~hmac=4c687b80cc6678ec06d905ab40f4bf7ddaf9ae6f5521c0aa80d71545b0c9420c'
+                }
+            }
+        }
+        // Provide a resource to the player
+        function playResource(player) {
+            //const resource = {
+            //    location: {
+            //        mediaUrl: 'http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8'
+            //    }
+            //};
+            const resource = {
+                ad: {
+                    ssai: {
+                        contentSourceId: '2631375',
+                        videoId: 'mgid:arc:episode:roku.playplex.bet.com:e37a642a-a7e3-11eb-8774-70df2f866ace',
+                        apiKey: 'cmsid=2631375~exp=1678841579~vid=mgid:arc:episode:roku.playplex.bet.com:e37a642a-a7e3-11eb-8774-70df2f866ace~hmac=4c687b80cc6678ec06d905ab40f4bf7ddaf9ae6f5521c0aa80d71545b0c9420c'
+                    }
+                }
+            }
+            player.attachResource(resource)
+                .then(() => {
+                    // resource successfully attached to player
+                    // video presentation may be clicked to start play
+                })
+                .catch( e => {
+                    // a problem prevented attaching the resource
+                    console.log(e);
+                })
+        }
+
+        createPlayer()
+            .then( player => {
+                playResource(player);
+            })
+            .catch( e => {
+                // problem with player creation
+                console.log(e);
+            })
+    </script>
+</body>
+</html>
