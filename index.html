@@ -56,15 +56,19 @@
                     }
                 }
             }
-            player.attachResource(resource)
-                .then(() => {
-                    // resource successfully attached to player
-                    // video presentation may be clicked to start play
-                })
-                .catch( e => {
-                    // a problem prevented attaching the resource
-                    console.log(e);
-                })
+            fetch("https://topaz.uat.viacomcbs.digital/topaz/api/mgid:arc:episode:mtv.com:0d37e555-1a52-11ed-ad8e-0e40cf2fc285/mica.json?clientPlatform=desktop")
+                .then((response) => response.json())
+                .then((data) => console.log(data));
+              /*  player.attachResource(resource)
+                    .then(() => {
+                        console.log("Brent resource load success");
+                        // resource successfully attached to player
+                        // video presentation may be clicked to start play
+                    })
+                    .catch( e => {
+                        // a problem prevented attaching the resource
+                        console.log(e);
+                    })*/
         }
 
         createPlayer()
