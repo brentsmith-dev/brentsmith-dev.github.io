@@ -36,15 +36,6 @@
             })
         }
 
-        const resource = {
-            ad: {
-                ssai: {
-                    contentSourceId: '2631375',
-                    videoId: 'mgid:arc:episode:roku.playplex.bet.com:e37a642a-a7e3-11eb-8774-70df2f866ace',
-                    apiKey: 'cmsid=2631375~exp=1678841579~vid=mgid:arc:episode:roku.playplex.bet.com:e37a642a-a7e3-11eb-8774-70df2f866ace~hmac=4c687b80cc6678ec06d905ab40f4bf7ddaf9ae6f5521c0aa80d71545b0c9420c'
-                }
-            }
-        }
         // Provide a resource to the player
         function playResource(player) {
             //const resource = {
@@ -52,29 +43,39 @@
             //        mediaUrl: 'http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8'
             //    }
             //};
-            const resource = {
+            var resource = {
                 ad: {
                     ssai: {
-                        contentSourceId: '2631375',
-                        videoId: 'mgid:arc:episode:roku.playplex.bet.com:e37a642a-a7e3-11eb-8774-70df2f866ace',
-                        apiKey: 'cmsid=2631375~exp=1678841579~vid=mgid:arc:episode:roku.playplex.bet.com:e37a642a-a7e3-11eb-8774-70df2f866ace~hmac=4c687b80cc6678ec06d905ab40f4bf7ddaf9ae6f5521c0aa80d71545b0c9420c',
-                        adParameters:{
+                        videoId: 'mgid:arc:episode:mtv.com:0d37e555-1a52-11ed-ad8e-0e40cf2fc285',
+                        adParameters: {
                             imafw_csid: "vcbs_bet_ctv_roku_vod",
-                            imafw__fw_vcid2: "XY6395lOvVueElPmLfqqItdPNEoGEolm0o0P-7iX62aUvHCto",
                             imafw_nw: "520311"
                         }
                     }
                 }
             }
-            player.attachResource(resource)
-                .then(() => {
-                    // resource successfully attached to player
-                    // video presentation may be clicked to start play
-                })
-                .catch( e => {
-                    // a problem prevented attaching the resource
-                    console.log(e);
-                })
+            var topazUrl = "https://topaz.uat.viacomcbs.digital/topaz/api/"+resource.ad.ssai.videoId+"/mica.json?clientPlatform=desktop";
+            fetch(topazUrl)
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log("Topaz data fetched");
+                    console.log(data);
+                    resource.ad.ssai.contentSourceId=data.imasdk.cmsid;
+                    resource.ad.ssai.videoId=data.imasdk.vid;
+                    resource.ad.ssai.adParameters["auth-token"] = data.imasdk.authtoken;
+                    player.attachResource(resource)
+                    .then(() => {
+                        console.log("Resource load success");
+                        // resource successfully attached to player
+                        // video presentation may be clicked to start play
+                    })
+                    .catch( e => {
+                        // a problem prevented attaching the resource
+                        console.log(e);
+                    })
+                });
+
+              
         }
 
         createPlayer()
