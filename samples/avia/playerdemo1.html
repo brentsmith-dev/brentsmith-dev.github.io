@@ -15,11 +15,26 @@
             height: 480px;
         }
     </style>
+    <!-- Loading Teailum Reporting script asynchronously -->
+    <script type="text/javascript">
+        (function(a,b,c,d){
+        a='https://tags.tiqcdn.com/utag/cbsi/webplex/prod/utag.js';
+        b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;
+        a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);
+        })();
+    </script>
 </head>
 <body>
     <div class='video-presentation-wrapper'>
         <div id='videoPresentationContainer'>
             <!-- This is the video presentation container -->
+            <avia-ui>
+                <div slot="overlay">
+                    <avia-active> <!-- only shows when UI is visible -->
+                        <div class="title">  Title or Whatever... </div>
+                    </avia-active>
+                </div>
+            </avia-ui>
         </div>
     </div>
 
@@ -29,7 +44,7 @@
             container: '#videoPresentationContainer',
             plugins: [
                 avia.hls.plugin(),
-                avia.ui.plugin(),
+                avia.ui.plugin({posterImageUrl:"https://images.paramount.tech/uri/mgid:arc:imageassetref:mtv.com:ff86c490-de55-4d51-81d9-684d355814f5?quality=0.7&gen=ntrn&legacyStatusCode=true"}),
                 avia.gam.plugin({debug:true})
             ]
         }
@@ -51,16 +66,16 @@
                             imafw_csid: "vcbs_bet_ctv_roku_vod",
                             imafw_nw: "520311"
                         }
+                    },
+                    metadata: {
+                        videoId: 'mgid:arc:episode:mtv.com:0d37e555-1a52-11ed-ad8e-0e40cf2fc285',
+                        seriesTitle: 'The Exhibit: Finding the Next Great Artist',
+                        videoTitle: 'The Infinite Scroll',
+                        episodeTitle: 'Season 1, Episode 2',
+                        episodeFlag: true,
+                        episodeNumber: '02',
+                        seasonNumber: '01'                    
                     }
-                },
-                metadata: {
-                    videoId: 'mgid:arc:episode:mtv.com:0d37e555-1a52-11ed-ad8e-0e40cf2fc285',
-                    seriesTitle: 'The Exhibit: Finding the Next Great Artist',
-                    videoTitle: 'The Infinite Scroll',
-                    episodeTitle: 'Season 1, Episode 2',
-                    episodeFlag: true,
-                    episodeNumber: '02',
-                    seasonNumber: '01'                    
                 }
             }
             var topazUrl = "https://topaz.uat.viacomcbs.digital/topaz/api/"+resource.ad.ssai.videoId+"/mica.json?clientPlatform=desktop";
