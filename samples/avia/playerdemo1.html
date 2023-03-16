@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <!-- Latest stable build of Avia OR site code that bundles Avia -->
+    <!-- See https://vidtech.cbsinteractive.com/avia-js/latest/docs/guides/getting_started for more information -->
+    <!-- Latest stable build of Avia -->
     <script src="https://vidtech.cbsinteractive.com/avia-js/2.12.0/player/avia.min.js"></script>
 
-    <!-- Latest stable builds of plugins OR site code that bundles plugins -->
+    <!-- Latest stable builds of HLS, UI, and Google DAI plugins -->
     <script src="https://vidtech.cbsinteractive.com/avia-js/2.12.0/plugins/hls/avia.hls.min.js"></script>
     <script src="https://vidtech.cbsinteractive.com/avia-js/2.12.0/plugins/ui/avia.ui.min.js"></script>
     <script src="https://vidtech.cbsinteractive.com/avia-js/2.12.0/plugins/gam/avia.gam.min.js"></script>
@@ -23,35 +24,43 @@
     </div>
 
     <script>
+        // Player Configurations - https://vidtech.cbsinteractive.com/avia-js/latest/docs/apis/avia-js/interfaces/PlayerOptionsInterface
+        const playerOptions = {
+            container: '#videoPresentationContainer',
+            plugins: [
+                avia.hls.plugin(),
+                avia.ui.plugin(),
+                avia.gam.plugin({debug:true})
+            ]
+        }
+
         // Create player, passing a container selector and
-        // plugin config via playerOptions
         function createPlayer() {
-            return avia.createVideoPlayer({
-                container: '#videoPresentationContainer',
-                plugins: [
-                    avia.hls.plugin(),
-                    avia.ui.plugin(),
-                    avia.gam.plugin({debug:true})
-                ]
-            })
+            return avia.createVideoPlayer(playerOptions);
         }
 
         // Provide a resource to the player
         function playResource(player) {
-            //const resource = {
-            //    location: {
-            //        mediaUrl: 'http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8'
-            //    }
-            //};
             var resource = {
                 ad: {
                     ssai: {
                         videoId: 'mgid:arc:episode:mtv.com:0d37e555-1a52-11ed-ad8e-0e40cf2fc285',
+                        contentSourceId: "2632141",
+                        authToken: "1234",
                         adParameters: {
                             imafw_csid: "vcbs_bet_ctv_roku_vod",
                             imafw_nw: "520311"
                         }
                     }
+                },
+                metadata: {
+                    videoId: 'mgid:arc:episode:mtv.com:0d37e555-1a52-11ed-ad8e-0e40cf2fc285',
+                    seriesTitle: 'The Exhibit: Finding the Next Great Artist',
+                    videoTitle: 'The Infinite Scroll',
+                    episodeTitle: 'Season 1, Episode 2',
+                    episodeFlag: true,
+                    episodeNumber: '02',
+                    seasonNumber: '01'                    
                 }
             }
             var topazUrl = "https://topaz.uat.viacomcbs.digital/topaz/api/"+resource.ad.ssai.videoId+"/mica.json?clientPlatform=desktop";
@@ -60,9 +69,9 @@
                 .then((data) => {
                     console.log("Topaz data fetched");
                     console.log(data);
-                    resource.ad.ssai.contentSourceId=data.imasdk.cmsid;
-                    resource.ad.ssai.videoId=data.imasdk.vid;
-                    resource.ad.ssai.adParameters["auth-token"] = data.imasdk.authtoken;
+                    resource.ad.ssai.contentSourceId = data.imasdk.cmsid;
+                    resource.ad.ssai.videoId = data.imasdk.vid;
+                    resource.ad.ssai.authToken = data.imasdk.authtoken;
                     player.attachResource(resource)
                     .then(() => {
                         console.log("Resource load success");
@@ -74,8 +83,6 @@
                         console.log(e);
                     })
                 });
-
-              
         }
 
         createPlayer()
