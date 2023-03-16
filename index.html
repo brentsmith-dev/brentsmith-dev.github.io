@@ -43,12 +43,10 @@
             //        mediaUrl: 'http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8'
             //    }
             //};
-            const resource = {
+            var resource = {
                 ad: {
                     ssai: {
-                        contentSourceId: '2632141',
                         videoId: 'mgid:arc:episode:mtv.com:0d37e555-1a52-11ed-ad8e-0e40cf2fc285',
-                        apiKey: 'cmsid=2564872~exp=1678845268~vid=mgid:arc:episode:mtv.com:0d37e555-1a52-11ed-ad8e-0e40cf2fc285~hmac=466e1d8c408c7b0df821e451a6b956b919e274b7b787ac7559efcd944a3731c5',
                         adParameters: {
                             imafw_csid: "vcbs_bet_ctv_roku_vod",
                             imafw_nw: "520311"
@@ -56,19 +54,28 @@
                     }
                 }
             }
-            fetch("https://topaz.uat.viacomcbs.digital/topaz/api/mgid:arc:episode:mtv.com:0d37e555-1a52-11ed-ad8e-0e40cf2fc285/mica.json?clientPlatform=desktop")
+            var topazUrl = "https://topaz.uat.viacomcbs.digital/topaz/api/"+resource.ad.ssai.videoId+"/mica.json?clientPlatform=desktop";
+            fetch(topazUrl)
                 .then((response) => response.json())
-                .then((data) => console.log(data));
-              /*  player.attachResource(resource)
+                .then((data) => {
+                    console.log("Topaz data fetched");
+                    console.log(data);
+                    resource.ad.ssai.contentSourceId=data.imasdk.cmsid;
+                    resource.ad.ssai.videoId=data.imasdk.vid;
+                    resource.ad.ssai.adParameters["auth-token"] = data.imasdk.authtoken;
+                    player.attachResource(resource)
                     .then(() => {
-                        console.log("Brent resource load success");
+                        console.log("Resource load success");
                         // resource successfully attached to player
                         // video presentation may be clicked to start play
                     })
                     .catch( e => {
                         // a problem prevented attaching the resource
                         console.log(e);
-                    })*/
+                    })
+                });
+
+              
         }
 
         createPlayer()
